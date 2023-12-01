@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { IgApiClient, Feed } = require('instagram-private-api');
+const {IgApiClient} = require("instagram-private-api");
 
 const ig = new IgApiClient();
 
@@ -14,22 +14,11 @@ ig.state.generateDevice(process.env.IG_USERNAME);
     const followers = await getAllItemsFromFeed(followersFeed);
     const following = await getAllItemsFromFeed(followingFeed);
     // Making a new map of users username that follow you.
-    const followersUsername = new Set(followers.map(({ username }) => username));
+    const followersUsername = new Set(followers.map(({username}) => username));
     // Filtering through the ones who aren't following you.
-    const notFollowingYou = following.filter(({ username }) => !followersUsername.has(username));
-
-    ig.request.send({
-        url: `/api/v1/friendships/3673555069/followers/`,
-        qs: {
-            // max_id: 10000,
-            search_surface: "",
-            order: 'default',
-            query: '',
-            enable_groups: true,
-        },
-    }).then(res => {
-        console.log(res);
-    });
+    const notFollowingYou = following.filter(({username}) => !followersUsername.has(username));
+    console.log(followersUsername)
+    console.log(notFollowingYou)
 })();
 
 /**

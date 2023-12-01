@@ -2,21 +2,30 @@ const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
+const {_getEdgeById} = require("./src/api/_get_edge_by_id");
+const webpack = require("webpack");
 
 module.exports = {
-    mode: 'development', // choose between 'production' or 'development'
+    mode: 'production', // choose between 'production' or 'development'
     resolve: {
         fallback: {
             // TODO check package
-            // fix for webpack < 5 polyfill.
-            // npm install https https-browserify url stream-http buffer
             "https": require.resolve("https-browserify"),
             "url": require.resolve("url/"),
             "http": require.resolve("stream-http"),
             "buffer": require.resolve("buffer/"),
+            "assert": require.resolve("assert/"),
+            "util": require.resolve("util/"),
+            "crypto": require.resolve("crypto-browserify"),
+            "querystring": require.resolve("querystring-es3"),
+            "stream": require.resolve("stream-browserify"),
+            "path": require.resolve("path-browserify"),
+            "zlib": require.resolve("browserify-zlib"),
+            "os": require.resolve("os-browserify/browser"),
+            "fs": false,
         }
     },
-    entry: { // The point or points where to start the application bundling process
+    entry: {
         background: path.resolve('src/background/index.js'),
         content: path.resolve('src/content/index.js'),
         popup: path.resolve('src/popup/index.js'),
@@ -29,7 +38,6 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
 
-        // Copies individual files or entire directories, which already exist, to the build directory.
         new CopyWebpackPlugin({
             patterns: [{
                 from: path.resolve('public/static'),
@@ -43,12 +51,21 @@ module.exports = {
             }],
         }),
 
-        // All webpack entry points will be included with <script> tags in the generated HTML.
-        // https://github.com/jantimon/html-webpack-plugin#options
         new HtmlWebpackPlugin({
             filename: 'popup.html',
             template: 'public/popup.html',
             chunks: ['popup'],
+        }),
+
+        // FIXME resolve error of 'fs' and 'buffer'
+        new webpack.DefinePlugin({
+            'process': {},
+            'process.env' : {
+                NODE_ENV: process.env.NODE_ENV
+            }
+        }),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
         }),
     ],
     module: {

@@ -1,41 +1,35 @@
-import React, {useState} from 'react';
-import {Menu} from 'antd';
-import {
-    InfoCircleFilled,
-    HomeFilled,
-    SettingFilled,
-} from '@ant-design/icons';
+import { Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home.js";
+import Header from "./components/Header/Header";
+import Profile from "./components/Profile";
+import Story from "./components/Story";
+import Reels from "./components/Reels";
+import Post from "./components/Post";
+import Igtv from "./components/Igtv";
+import Error from "./components/Error";
+import Footer from "./components/Footer/Footer";
 
-const componentsSwitch = (key) => {
-    switch (key) {
-        case 'Home':
-            return <Home/>;
-        case 'Settings':
-            return (<h1>Settings</h1>);
-        case 'Info':
-            return (<h3>Info</h3>);
-        default:
-            break;
-    }
-};
+import "./App.css";
+import "./components/Styles/commonStyles.css";
+
 
 const App = () => {
-    const [selectedMenuItem, setSelectedMenuItem] = useState('item1');
-
     return (
-        <div className="App">
-            <Menu
-                selectedKeys={selectedMenuItem} mode="horizontal" onClick={(e) => setSelectedMenuItem(e.key)}>
-                <Menu.Item key="Home" icon={<HomeFilled/>}>Home</Menu.Item>
-                <Menu.Item key="Settings" icon={<SettingFilled/>}>Settings</Menu.Item>
-                <Menu.Item key="Info" icon={<InfoCircleFilled/>}>Information</Menu.Item>
-            </Menu>
-            <div>
-                {componentsSwitch(selectedMenuItem)}
-            </div>
-        </div>)
+        <>
+            <Header />
+            <Routes>
+                <Route exact path="/igdownloader/" component={Profile} />
+                <Route path="/igdownloader/profile" component={Profile} />
+                <Route path="/igdownloader/story" component={Story} />
+                <Route path="/igdownloader/reel" component={Reels} />
+                <Route path="/igdownloader/post" component={Post} />
+                <Route path="/igdownloader/igtv" component={Igtv} />
+                <Route component={Error} />
+                <Route />
+            </Routes>
+            <Footer />
+        </>
+    );
 };
 
 export default App;

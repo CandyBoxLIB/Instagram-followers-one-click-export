@@ -1,5 +1,3 @@
-import {loginAndSaveSession} from "../api";
-
 (() => {
     console.log('Background script loaded!');
 
